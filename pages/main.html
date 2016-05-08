@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>getCoffee</title>
+        <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
+        <script src="main.js"></script>
+        <script src="filesystem.js"></script>
+        <style type="text/css">
+        @import url(https://fonts.googleapis.com/css?family=Playfair+Display:400,700);
+        
+        @font-face {
+            font-family: 'Roboto Slab', serif;
+            src: url(https://fonts.googleapis.com/css?family=Roboto+Slab);
+        }
+        
+        html, body {
+           height: 100%;
+           width: 100%;
+           margin: 0;
+           padding: 0;
+        }
+        .centering {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .typography-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
+            font-size: 7vw;
+            border-style: solid;
+            border-top-width: thick;
+            border-bottom-width: thick;
+            border-left: none;
+            border-right: none;
+            margin: 0px;
+            /*text-align: center;*/
+        }
+        .typography-wrapper {
+            margin: 0 auto;
+        }
+        .typography-subtitle {
+            word-wrap: break-word;
+            line-height: 150%;
+        }
+        
+        .visor {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 10 !important;
+            background-color: #263238;
+            margin: 0;
+            padding: 0;
+            overflow-y: scroll;
+        }
+        
+        .visor p {
+            word-wrap: break-word;
+            font-size: 1em;
+            font-family: 'Roboto Slab', serif;
+            margin: 0;
+            padding: 0;
+            color: #A1B0B8;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="visor" class="visor" hidden="true">
+        
+        </div>
+        <div class="centering">
+            <h1 class="typography-title">Howard Stark</h1>
+            <div class="typography-wrapper">
+                <p class="typography-subtitle">Hi! My name is Howard Stark, and I am an avid programmer, movie-goer, and coffee lover. I live in the Bay Area, and am still currently in school.</p>
+            </div>
+        </div>
+        <script>
+        
+        /**
+        Black: #252525
+        Red: #FF5252
+        Green: #C3D82C
+        Yellow: #FFD740
+        Blue: #40C4FF
+        Magenta: #FF4081
+        Cyan: #18FFFF
+        White: #F5F5F5
+        Text: #A1B0B8
+        Background: #263238        
+        **/
+        
+        $(document).ready(function() {
+            header = $(".typography-title")[0].getBoundingClientRect();
+            targetWidth = header.right - header.left;
+            console.log(targetWidth);
+            $(".typography-wrapper").css('width',targetWidth);
+            
+            initializeVisor();
+        });
+        
+        $(document).keyup(function (e) {
+            if(e.which == 27) { toggleVisor(); }
+        });
+        
+        </script>
+    </body>
+</html>
