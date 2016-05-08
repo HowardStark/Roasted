@@ -27,16 +27,32 @@ function initializeVisor() {
     newPrompt();
 }
 
-function notifyVisor() {
-    
-}
-
 function toggleVisor() {
     console.log("ESCAPE");
     $('#visor').toggle();
-    if($('#btnUpdate').is(":visible")) {
-        notifyVisor();
+    if($('#visor').is(":visible")) {
+        visorEnabled();
+    } else {
+        visorDisabled();
     }
+}
+
+function visorEnabled() {
+    $(document).keypress(function (e) {
+        switch(e.which) {
+            case ENTER:
+                if (getInput() != "") execute(getInput());
+                newPrompt();
+                break;
+            default:
+                $(currentPrompt[cursorKey]).children('span#input').append(String.fromCharCode(e.which));
+                break;
+        }
+    });
+}
+
+function visorDisabled() {
+    $(document).unbind("keypress");
 }
 
 function newPrompt() {
@@ -68,17 +84,3 @@ function execute(command) {
 function getInput() {
     return $(currentPrompt[cursorKey]).children("span#input").text();
 }
-
-$(document).keypress(function (e) {
-    switch(e.which) {
-        case ENTER:
-            if(getInput() != "") {
-                execute(getInput())
-            }
-            newPrompt();
-            break;
-        default:
-            $(currentPrompt[cursorKey]).children('span#input').append(String.fromCharCode(e.which));
-            break;
-    }
-});
