@@ -1,33 +1,48 @@
 class FileSystem {
-     
-     constructor() {
-         this.rootDir = new Directory("/", ".");
-         buildRoot(this.rootDir);
-     }
-
-     buildRoot(directory) {
-         directory.addChild(new Directory("usr", directory));
-         directory.getChild("usr").addChild(new Directory("bin", directory.getChild("usr")));
-         directory.addChild(new Directory("home", directory));
-         directory.getChild("home").addChild(new Directory("guest", directory.getChild("home")));
-     }
-     
-     getRoot() {
-         return this.rootDir;
-     }
-     
-     traverse(path) {
-         var pathSegments = path.split("/");
-         var latestStructure = this.rootDir;
-         for(i = 0; i < pathSegments.length; i++) {
-             latestStructure = latestStructure.getChild(pathSegments[i]);
-         }
-         return latestStructure;
-     }
-     
+    
+    constructor() {
+        this.rootDir = new Directory("/", null);
+        this.buildRoot(this.rootDir);
+    }
+    
+    buildRoot(directory) {
+        directory.addChild(new Directory("usr", directory));
+        directory.getChild("usr").addChild(new Directory("bin", directory.getChild("usr")));
+        directory.addChild(new Directory("home", directory));
+        directory.getChild("home").addChild(new Directory("guest", directory.getChild("home")));
+        var execPath = this.traverse("/usr/bin/");
+        execPath.addChild(new File("pwd", execPath));
+        execPath.addChild(new File("ls", execPath));
+        var homePath = this.traverse("/home/guest/");
+        homePath.addChild(new File("ayy", homePath));
+    }
+    
+    getRoot() {
+        return this.rootDir;
+    }
+    
+    traverse(path) {
+        if(path.charAt(0) == "/") {
+            path = path.slice(1);
+        }
+        if(path.charAt(path.length - 1) == "/") {
+            path = path.slice(0, -1);
+        }
+        var pathSegments = path.split("/");
+        var latestStructure = this.rootDir;
+        if(pathSegments[0] != "") {
+            for(var i = 0; i < pathSegments.length; i++) {
+                latestStructure = latestStructure.getChild(pathSegments[i]);
+            }
+        }
+        console.info(latestStructure);
+        return latestStructure;
+    }
+    
 }
 
 class DataStructure {
+    
     constructor(name, parent) {
         this.name = name;
         this.parent = parent;
@@ -35,6 +50,13 @@ class DataStructure {
     
     getName() {
         return this.name;
+    }
+    
+    getPath() {
+        if(this.parent != null) {
+            return this.parent.getPath() + "/" + this.name;
+        }
+        return "";
     }
     
     getParent() {
@@ -47,8 +69,8 @@ class Directory extends DataStructure {
     constructor(name, parent) {
         super(name, parent);
         this.children = {};
-        addChild(new Directory(".", this.parent));
-        addChild(new Directory("..", this.parent.parent));
+        this.children["."] = this;
+        this.children[".."] = this.parent;
     }
     
     addChild(child) {
@@ -56,7 +78,11 @@ class Directory extends DataStructure {
     }
     
     getChild(name) {
-        return children[name];
+        return this.children[name];
+    }
+    
+    getChildren() {
+        return this.children;
     }
     
     hasChild(name) {
@@ -88,4 +114,4 @@ class File extends DataStructure {
 //  /home/guest/.cshrc
 //  
 //  Basics:
-//  cat, echo, nano, cd, ls, cacao, man
+//  csh, cat, echo, nano, cd, ls, cacao, man

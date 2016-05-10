@@ -5,7 +5,12 @@
         <meta charset="utf-8">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
         <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,700' rel='stylesheet' type='text/css'>
-        <script src="../assets/main.js"></script>
+        <script src="../assets/visor.js"></script>
+        <script src="../assets/utils.js"></script>
+        <script src="../assets/shell.js"></script>
+        <script src="../assets/command.js"></script>
+        <script src="../assets/pwd.js"></script>
+        <script src="../assets/ls.js"></script>
         <script src="../assets/filesystem.js"></script>
         <style type="text/css">
         @import url(https://fonts.googleapis.com/css?family=Playfair+Display:400,700);
@@ -82,31 +87,41 @@
         </div>
         <script>
         
-        /**
-        Black: #252525
-        Red: #FF5252
-        Green: #C3D82C
-        Yellow: #FFD740
-        Blue: #40C4FF
-        Magenta: #FF4081
-        Cyan: #18FFFF
-        White: #F5F5F5
-        Text: #A1B0B8
-        Background: #263238        
-        **/
-        
+        const ENTER = 13;
+        const DEL   = 8;
+        var visor = new Visor();
+
         $(document).ready(function() {
             header = $(".typography-title")[0].getBoundingClientRect();
             targetWidth = header.right - header.left;
             console.log(targetWidth);
             $(".typography-wrapper").css('width',targetWidth);
-            
-            initializeVisor();
+            visor.initialize();
         });
         
         $(document).keyup(function (e) {
-            if(e.which == 27) { toggleVisor(); }
+            if(e.which == 27) { visor.toggle(); }
         });
+        
+        (function(){
+            var oldLog = console.log;
+            console.log = function (message) {
+                if(Visor.enabled) {
+                    visor.stdout(message);
+                }
+                oldLog.apply(console, arguments);
+            };
+        })();
+
+        (function(){
+            var oldErr = console.error;
+            console.error = function (message) {
+                if(Visor.enabled) {
+                    visor.stderr(message);
+                }
+                oldErr.apply(console, arguments);
+            };
+        })();
         
         </script>
     </body>

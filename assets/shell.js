@@ -1,38 +1,68 @@
 class CoffeeShell {
     
-    constructor() {
-        this.fileSystem = new FileSystem()
-        this.activeDir = this.fileSystem.getRoot().getChild("home").getChild("guest");
+    get progName() { return "csh"; }
+    
+    constructor(visor) {
+        console.info("CSH STARTED");
+        this.cursor = "▊";
+        this.prompt = ["<p><span style='color: " + CoffeeColors.RED + ";'>guest</span> <span style='color: " + CoffeeColors.WHITE + ";'>at</span> <span style='color: " + CoffeeColors.YELLOW + ";'>getcoffee.io</span> <span style='color: " + CoffeeColors.WHITE + ";'>in</span> <span style='color: " + CoffeeColors.YELLOW + ";'>~</span></p>", 
+                      "<p>> <span id='input'></span><span id='prompt'>" + this.cursor + "</span></p>"];
+        this.cursorKey = 1;
+        this.currentPrompt = null;
+        this.visor = visor;
+        console.info(visor);
+        this.newPrompt();
+        console.info(visor);
     }
     
-    execute(command) {
-        var output = CommandParser.parse(command, true);
-        
+    newPrompt() {
+        if(this.currentPrompt != null) {
+            $(this.currentPrompt[this.cursorKey]).children("span#prompt").text("");
+        }
+        this.currentPrompt = [];
+        for(var i = 0; i < this.prompt.length; i++) {
+            this.currentPrompt[i] = $.parseHTML(this.prompt[i]);
+            this.visor.outputRaw(this.currentPrompt[i]);
+        }
     }
     
+    getInput() {
+        return $(this.currentPrompt[this.cursorKey]).children("span#input").text();
+    }
+    
+    handleKeypress(e) {
+        switch(e.which) {
+            case ENTER:
+                if(this.getInput() != "") this.visor.execute(this.getInput());
+                break;
+            default:
+                $(this.currentPrompt[this.cursorKey]).children('span#input').append(String.fromCharCode(e.which));
+                break;
+        }
+    }
+    
+    handleKeydown(e) {
+        if(e.which == 8 || e.which == 46) {
+            e.preventDefault();
+            if(this.getInput().length > 0) {
+                $(this.currentPrompt[this.cursorKey]).children('span#input').text(this.getInput().substring(0, this.getInput().length - 1));
+            }   
+        }
+    }
+    
+    handleKeyup(e) {}
+
 }
 
-// http://krasimirtsonev.com/blog/article/Simple-command-line-parser-in-JavaScript
-var CommandParser = (function() {
-    var parse = function(str, lookForQuotes) {
-        var args = [];
-        var readingPart = false;
-        var part = '';
-        for(var i=0; i            if(str.charAt(i) === ' ' && !readingPart) {
-                args.push(part);
-                part = '';
-            } else {
-                if(str.charAt(i) === '\"' && lookForQuotes) {
-                    readingPart = !readingPart;
-                } else {
-                    part += str.charAt(i);
-                }
-            }
-        }
-        args.push(part);
-        return args;
-    }
-    return {
-        parse: parse
-    }
-})();
+class CoffeeColors {
+    static get BLACK() { return "#252525"; }
+    static get RED() { return "#FF5252"; }
+    static get GREEN() { return "#C3D82C"; }
+    static get YELLOW() { return "#FFD740"; }
+    static get BLUE() { return "#40C4FF"; }
+    static get MAGENTA() { return "#FF4081"; }
+    static get CYAN() { return "#18FFFF"; }
+    static get WHITE() { return "#F5F5F5"; }
+    static get TEXT() { return "#A1B0B8"; }
+    static get BACKGROUND() { return "#263238"; }
+}
