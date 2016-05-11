@@ -1,4 +1,4 @@
-mi"use strict";
+"use strict";
 
 class FileSystem {
     
