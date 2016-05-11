@@ -1,3 +1,5 @@
+"use strict";
+
 class Visor {
     
     get enabled() { return Visor.enabled; }

@@ -1,3 +1,5 @@
+"use strict";
+
 class CoffeeShell {
     
     get progName() { return "csh"; }

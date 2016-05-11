@@ -1,3 +1,5 @@
+"use strict";
+
 class Ls extends Command {
     static call(context, args) {
         
@@ -35,7 +37,13 @@ class Ls extends Command {
         for(var i = 0; i < toList.length; i++) {
             var location = toList[0];
             if(location.startsWith("/")) {
-                for(var child in context.getFileSystem().traverse(location).getChildren()) {
+                var targetLocation = context.getFileSystem().traverse(location);
+                console.info(targetLocation);
+                if(!(targetLocation instanceof Directory)) {
+                    console.log(targetLocation.getPath());
+                    return;
+                }
+                for(var child in targetLocation.getChildren()) {
                     console.info(child);
                     if(flags["a"]) {
                         if(flags["l"]) {
@@ -54,7 +62,12 @@ class Ls extends Command {
                     }
                 }
             } else {
-                for(var child in context.getFileSystem().traverse(context.getActiveDir().getPath() + "/" + location).getChildren()) {
+                var targetLocation = context.getFileSystem().traverse(context.getActiveDir().getPath() + "/" + location)
+                if(!(targetLocation instanceof Directory)) {
+                    console.log(targetLocation.getPath());
+                    return;
+                }
+                for(var child in targetLocation.getChildren()) {
                     if(flags["a"]) {
                         if(flags["l"]) {
                             output.push(child);
