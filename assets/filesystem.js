@@ -3,7 +3,7 @@
 class FileSystem {
     
     constructor() {
-        this.rootDir = new Directory("/", null);
+        this.rootDir = new Directory("/", this.rootDir);
         this.buildRoot(this.rootDir);
     }
     
@@ -15,8 +15,8 @@ class FileSystem {
         var execPath = this.traverse("/usr/bin/");
         execPath.addChild(new File("pwd", execPath));
         execPath.addChild(new File("ls", execPath));
+        execPath.addChild(new File("cd", execPath));
         var homePath = this.traverse("/home/guest/");
-        homePath.addChild(new File("ayy", homePath));
     }
     
     getRoot() {

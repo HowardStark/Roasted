@@ -8,7 +8,8 @@ class Visor {
     constructor() {
         this._enabled = false;
         this.fileSystem = new FileSystem()
-        this.activeDir = this.fileSystem.getRoot().getChild("home").getChild("guest");
+        this.activeDir = this.fileSystem.traverse("/home/guest/");
+        Visor.homeDir = this.fileSystem.traverse("/home/guest/");
     }
     
     initialize() {
@@ -37,15 +38,15 @@ class Visor {
         $('#visor').scrollTop($('#visor').height());
     }
     
-    getActiveDir() {
-        return this.activeDir;
+    getActiveDir() { return this.activeDir; }
+    
+    setActiveDir(dir) {
+        this.activeDir = dir;
     }
     
     getFileSystem() { return this.fileSystem; }
     
-    getRunning() {
-        return Visor.progRunning;
-    }
+    getRunning() { return Visor.progRunning; }
     
     setRunning(nowRunning) {
         Visor.progRunning = nowRunning;
@@ -115,3 +116,4 @@ var CommandParser = (function() {
 })();
 Visor.progRunning = null;
 Visor.enabled = false;
+Visor.homeDir = null;

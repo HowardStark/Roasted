@@ -7,7 +7,7 @@ class CoffeeShell {
     constructor(visor) {
         console.info("CSH STARTED");
         this.cursor = "▊";
-        this.prompt = ["<p><span style='color: " + CoffeeColors.RED + ";'>guest</span> <span style='color: " + CoffeeColors.WHITE + ";'>at</span> <span style='color: " + CoffeeColors.YELLOW + ";'>getcoffee.io</span> <span style='color: " + CoffeeColors.WHITE + ";'>in</span> <span style='color: " + CoffeeColors.YELLOW + ";'>~</span></p>", 
+        this.prompt = ["<p><span style='color: " + CoffeeColors.RED + ";'>guest</span> <span style='color: " + CoffeeColors.WHITE + ";'>at</span> <span style='color: " + CoffeeColors.YELLOW + ";'>getcoffee.io</span> <span style='color: " + CoffeeColors.WHITE + ";'>in</span> <span id='pwd' style='color: " + CoffeeColors.YELLOW + ";'>" + "</span></p>", 
                       "<p>> <span id='input'></span><span id='prompt'>" + this.cursor + "</span></p>"];
         this.cursorKey = 1;
         this.currentPrompt = null;
@@ -24,6 +24,7 @@ class CoffeeShell {
         this.currentPrompt = [];
         for(var i = 0; i < this.prompt.length; i++) {
             this.currentPrompt[i] = $.parseHTML(this.prompt[i]);
+            if($(this.currentPrompt[i]).children("span#pwd") != undefined) $(this.currentPrompt[i]).children("span#pwd").text(((visor.getActiveDir() == Visor.homeDir) ? "~" : visor.getActiveDir().getPath()));
             this.visor.outputRaw(this.currentPrompt[i]);
         }
     }
