@@ -9,10 +9,12 @@ class Cd extends Command {
             totalArgs = totalArgs.concat(seperate);
         }
         for(var i = 0; i < totalArgs.length; i++) {
-            var currArg = totalArgs.pop();
+            var currArg = totalArgs.slice(-1 - i)[0];
             console.info(currArg);
             if(context.getActiveDir().hasChild(currArg)) {
                 context.setActiveDir(context.getActiveDir().getChild(currArg));
+            } else {
+                console.error("no such file or directory: " + totalArgs.join("/"));
             }
         }
         console.info(context.getActiveDir());

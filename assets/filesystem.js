@@ -1,9 +1,9 @@
-"use strict";
+mi"use strict";
 
 class FileSystem {
     
     constructor() {
-        this.rootDir = new Directory("/", this.rootDir);
+        this.rootDir = new Directory("/", null);
         this.buildRoot(this.rootDir);
     }
     
@@ -56,9 +56,9 @@ class DataStructure {
     
     getPath() {
         if(this.parent != null) {
-            return this.parent.getPath() + "/" + this.name;
+            return this.parent.getPath() + this.name + "/";
         }
-        return "";
+        return "/";
     }
     
     getParent() {
