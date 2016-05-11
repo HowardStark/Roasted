@@ -31,7 +31,7 @@ class Ls extends Command {
             toList.push(".");
         }
 
-        console.info(flags);
+        console.info(toList);
         var output = [""];
         
         for(var i = 0; i < toList.length; i++) {
@@ -40,7 +40,7 @@ class Ls extends Command {
                 var targetLocation = context.getFileSystem().traverse(location);
                 console.info(targetLocation);
                 if(!(targetLocation instanceof Directory)) {
-                    console.log(targetLocation.getPath());
+                    console.error("cannot access '" + location + "': No such file or directory");
                     return;
                 }
                 for(var child in targetLocation.getChildren()) {
@@ -62,9 +62,10 @@ class Ls extends Command {
                     }
                 }
             } else {
-                var targetLocation = context.getFileSystem().traverse(context.getActiveDir().getPath() + "/" + location)
+                var targetPath = context.getActiveDir().getPath() + location;
+                var targetLocation = context.getFileSystem().traverse(targetPath);
                 if(!(targetLocation instanceof Directory)) {
-                    console.log(targetLocation.getPath());
+                    console.error("cannot access '" + targetPath + "': No such file or directory");
                     return;
                 }
                 for(var child in targetLocation.getChildren()) {

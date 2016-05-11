@@ -37,7 +37,6 @@ class FileSystem {
                 latestStructure = latestStructure.getChild(pathSegments[i]);
             }
         }
-        console.info(latestStructure);
         return latestStructure;
     }
     

@@ -12,9 +12,7 @@ class CoffeeShell {
         this.cursorKey = 1;
         this.currentPrompt = null;
         this.visor = visor;
-        console.info(visor);
         this.newPrompt();
-        console.info(visor);
     }
     
     newPrompt() {
